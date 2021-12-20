@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Graphes - DigitalSolutions</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.0/chart.min.js" integrity="sha512-GMGzUEevhWh8Tc/njS0bDpwgxdCJLQBWG3Z2Ct+JGOpVnEmjvNx6ts4v6A2XJf1HOrtOsfhv3hBKpK9kE5z8AQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+  .normaltemp{
+    background-color : rgb(0, 199, 201);
+    color:white;
+    font-size:25px;
+    text-align:center;
+    padding:auto;
+  }
+  </style>
+
+</head>
+<body>
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-md-12 col-sm-12 normaltemp">
+    {% for i in grph|slice:"1" %} 
+        <p style="margin-bottom: 5px;"> Normal Temperature Between {{i.asset.min_critical_telemetry}}  (°C)  and {{i.asset.max_critical_telemetry}} (°C) </p>
+         {% endfor %}
+    </div>
+    
+    </div>
+    </div>
+    <div class="container">
+        <div class="row" >
+        
+        <div class="col-md-6 col-sm-12">
+        <canvas id="myChart1" width="200px" height="200px"></canvas>
+      
+        </div>
+        <div class="col-md-6 col-sm-12">
+         <canvas id="myChart2" width="200px" height="200px"></canvas>
+        </div>
+        </div>
+    </div>
+
+
+<script>
+//chart 1
+const labels1 = [{% for i in grph %} '{{ i.dt|date:"M d, Y" }}', {% endfor %}];
+const data1 = {
+  labels: labels1,
+  datasets: [{
+    label: 'Temperature (°C)' ,
+    data: [{% for i in grph %} '{{ i.temp }}' , {% endfor %} ],
+    fill: true,
+    borderColor: 'rgb(139,0,0)'
+    
+  }]
+    
+};
+
+const config1 = {
+  type: 'line',
+  data: data1,
+  options :{}
+};
+
+
+const myChart1 = new Chart(document.getElementById('myChart1'),
+config1);
+
+//chart 2
+
+const labels2 = [{% for i in grph %} '{{ i.dt|date:"M d, Y" }}', {% endfor %}];
+const data2 = {
+  labels: labels2,
+  datasets: [{
+    label: 'Humidity (%)' ,
+    data: [{% for i in grph %} '{{ i.hum }}' , {% endfor %} ],
+    fill: true,
+    borderColor: 'rgb(0, 176, 241)'
+    
+  }]
+    
+};
+
+const config2 = {
+  type: 'line',
+  data: data2,
+  options :{}
+};
+
+
+const myChart2 = new Chart(document.getElementById('myChart2'),
+config2);
+
+
+
+</script>
+</body>
+</html>
